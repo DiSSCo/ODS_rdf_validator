@@ -1,11 +1,10 @@
 # ODS_rdf_validator
 
-Experimental project!
+## Description
+This project provides a node.js-based micro service for semantic RDF validation of jsonld data against a defined schema based on the ODS ontology. The idea is to call this micro service from Cordra JavaScript during the lifecycle hooks (e.g. "beforeSchemaValidation"), and accordingly allow or reject the creation/update of the digital specimen.
 
-The goal is to have a semantic RDF validation of JSONld data that is sent to cordra, by using the Cordra JavaScript lifecycle hooks (e.g. "beforeSchemaValidation").
+## Install and run
+For local development run `npm i` and `npm run test`. For production deployment run `npm i --only=prod` and run it as a service (e.g. with systemd). Customize the file located in config/config.js.
 
-Run `npm run build` in order to transpile and bundle into one minified .js file. Upload this file to Cordra as an external JavaScript module as explained in the docs. Additionally upload the jsonld JavaScript library as UMD module. Then create the schema as the example given in cordra_data/ODS_semantic_schema. Then test the upload with of the example data with the curl command.
-
-Current problems:
-- Validation seems to work, but due to shex.js and jsonld dependencies the validation function can only be provided as a promise. The cordra lifecycle JavaScript hook doesn't seem to wait for the promise (only synchronous JavaScript implemented), therefore Cordra continues before the RDF validation is finished.
-- The JavaScript execution of the bundled js fails from time to time for no apparent reason.
+## Interaction with cordra
+The file located in cordra_data/ODS_semantic_schema.json contains a template for a schema that can be created in Cordra. Afterwards, any Cordra object of type "ODS_semantic_schema" that will be created/updated, will be validated by the micro service beforehand (you can test it with the example curl command in the same folder). Make sure that the URL pointing to the micro service is correct in the javascript that is appended to the Cordra schema.
