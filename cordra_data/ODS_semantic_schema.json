@@ -1,7 +1,6 @@
 {
   "identifier": "test.20.5000.1025/ODS_semantic_schema",
   "name": "ODS_semantic_schema",
-  "description": "The json schema checks the that a correct jsonld object is passed. The semantic validation will afterwards be performed with the JavaScript library",
   "schema": {
     "definitions": {
       "previewInResultsTrue": {
@@ -88,7 +87,7 @@
             "type": "string",
             "title": "The ods schema",
             "enum": [
-              "http://github.com/DiSSCo/openDS/ods-ontology/terms/"
+              "http://github.com/hardistyar/openDS/ods-ontology/terms/"
             ]
           }
         },
@@ -103,5 +102,5 @@
     },
     "additionalProperties": false
   },
-  "javascript": "var cordra = require(\"cordra\");\nvar odslib = require(\"ods-shex-validator\");\nvar jsonld = require(\"jsonld\");\n\nexports.beforeSchemaValidation = beforeSchemaValidation;\n\nfunction beforeSchemaValidation(object, context) {\n    console.log(\"beforeSchemaValidation: Validating RDF with Shex\");\n    console.log(\"object\", object);\n    console.log(\"object\", object.content[\"@context\"].ods);\n\n    let isValid;\n    odslib.validate(\n       \"http://172.28.128.8/objects/test.20.5000.1025/a45573cbd021fe072398?payload=payload\",\n       object.content,\n       \"https://doi.org/20.5000.1025/ae88bb3a666ec72dbc52\",\n       jsonld)\n    .then(function(r){\n       console.log(\"RDF validation is conformant:\", r[0].status);\n       isValid = r[0].status === \"conformant\";  \n    });\n\n    if(isValid){\n          return object;\n      } else {\n          console.log(\"will throw error RDF validation failed\");\n          throw(\"RDF validation failed\");\n      }\n}\n\n"
+  "javascript": "// Nashorn JDK cannot use XmlHttpRequest, therefore we must use Java Http requests\n// see for reference: https://gist.github.com/billybong/a462152889b6616deb02\n\nvar cordra = require(\"cordra\");\n\nexports.beforeSchemaValidation = beforeSchemaValidation;\n\nfunction beforeSchemaValidation(object, context) {\n    var dataToBeValidated = JSON.stringify({\n        \"id\": \"https://doi.org/20.5000.1025/ae88bb3a666ec72dbc52\",\n        \"content\": object.content\n    });\n    var con = new java.net.URL(\"http://172.28.128.8:3000/validate\").openConnection();\n    var response = {};\n    try {\n    write(con, dataToBeValidated);\n    response = JSON.parse(read(con.inputStream));\n    } catch (e){\n        console.log(\"RDF validation error\", e);\n    }\n    if(con.responseCode === 200 && response.success){\n        if(response.result[0].status === \"conformant\"){\n            return object;   \n        } else {\n            throw(\"RDF is not conformant to ODS schema\");\n        }\n    } else {\n        throw(response.msg || \"An error occurred during validation\");\n    }\n}\n\nfunction read(inputStream){\n    var inReader = new java.io.BufferedReader(new java.io.InputStreamReader(inputStream));\n    var inputLine;\n    var response = new java.lang.StringBuffer();\n\n    while ((inputLine = inReader.readLine()) !== null) {\n           response.append(inputLine);\n    }\n    inReader.close();\n    return response.toString();\n}\n\nfunction write(con, data){\n    con.requestMethod = \"POST\";\n    con.setRequestProperty( \"Content-Type\", \"application/json; charset=utf-8\");\n    con.doOutput=true;\n    var wr = new java.io.DataOutputStream(con.outputStream);\n    wr.writeBytes(data);\n    wr.flush();\n    wr.close();\n}"
 }
