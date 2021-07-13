@@ -1,6 +1,5 @@
 const ShExUtil = require("@shexjs/util");
 const ShExValidator = require("@shexjs/validator");
-const ShExParser = require("@shexjs/parser");
 const n3 = require("n3");
 const jsonld = require("jsonld");
 
@@ -14,11 +13,7 @@ const SHEX_SCHEMA_TXT = "PREFIX ods: <http://github.com/hardistyar/openDS/ods-on
 +"ods:name xsd:string,\n"
 +"ods:physicalSpecimenId xsd:string}";
 
-console.log("ods_rdf_validator initialized");
-
-async function validate(odsObject, id){
-  console.log("validation function called!");
-
+async function validate(odsObject, id, shexSchema){
   return jsonld.toRDF(odsObject, {format: 'application/n-quads'})
   .then(rdfData => {
     return new Promise(function (resolve, reject) {
@@ -41,13 +36,9 @@ async function validate(odsObject, id){
       resolve(loadedData);
     });
   }).then(loadedData => {
-    const url = "http://172.28.128.8/objects/test.20.5000.1025/";
-    const shParser = ShExParser.construct(url, {}, {});
-    const parsedSchema = shParser.parse(SHEX_SCHEMA_TXT)
-    if (parsedSchema.base === url) delete parsedSchema.base;
-    var db = ShExUtil.rdfjsDB(loadedData);
-    var validator = ShExValidator.construct(parsedSchema, db, { results: "api" });
-    const result = validator.validate([{node: id, shape: "http://172.28.128.8/objects/test.20.5000.1025/OdsShape"}]);
+    const db = ShExUtil.rdfjsDB(loadedData);
+    const validator = ShExValidator.construct(shexSchema, db, { results: "api" });
+    const result = validator.validate([{node: id, shape: "OdsShape"}]);
     return result;
   });
 }

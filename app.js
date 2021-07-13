@@ -1,12 +1,16 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const https = require('https');
 
-var indexRouter = require('./routes/index');
+const ShExParser = require("@shexjs/parser");
 
-var app = express();
+const config = require('./config/config');
+const indexRouter = require('./routes/index');
+
+const app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -27,6 +31,17 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.json('error');
+});
+
+const agent = new https.Agent({
+  rejectUnauthorized: !config.selfSignedCertificate
+});
+fetch(config.schemaUrl, { agent })
+.then(res => res.text())
+.then(schemaTxt => {
+  const shParser = ShExParser.construct();
+  const parsedSchema = shParser.parse(schemaTxt)
+  app.locals.shexSchema = parsedSchema;
 });
 
 module.exports = app;

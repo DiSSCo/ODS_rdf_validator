@@ -15,8 +15,12 @@ router.get('/validate', function(req, res) {
 });
 
 router.post('/validate', async(req, res) => {
+  const shexSchema = req.app.locals.shexSchema;
+  if(!shexSchema){
+    res.status(200).json({"success": false, "msg":"Error: Validation schema not initialized. Please wait for the validator application to be initialized."});
+  }
   try {
-    const validationResult = await validate(req.body.content, req.body.id);
+    const validationResult = await validate(req.body.content, req.body.id, shexSchema);
     res.status(200).json({"success": true, "result": validationResult});
   } catch(e) {
     res.status(200).json({"success": false, "msg":"An error occurred during validation"});

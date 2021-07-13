@@ -1,0 +1,11 @@
+PREFIX ods: <http://github.com/hardistyar/openDS/ods-ontology/terms/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+start = <OdsShape>  # Issue validation starts with <IssueShape>
+
+<OdsShape> {
+  ods:midsLevel xsd:integer,
+  ods:name xsd:string,
+  ods:physicalSpecimenId xsd:string
+}
