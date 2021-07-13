@@ -8,10 +8,7 @@ const config = require('../config/config');
 const testObject ={"id":"test.20.5000.1025/testId1","typeName":"ODStype1804","@context":{"ods":"http://github.com/hardistyar/openDS/ods-ontology/terms/"},"@graph":[{"@id":"https://doi.org/20.5000.1025/ae88bb3a666ec72dbc52","ods:midsLevel":[{"@value":1}],"ods:name":[{"@value":"Elophila nymphaeata (Linnaeus, 1758)"}],"ods:physicalSpecimenId":[{"@value":"NHMUK010517563"}]}]}
 
 const createSchema = () => {
-  const agent = new https.Agent({
-    rejectUnauthorized: !config.selfSignedCertificate
-  });
-  return fetch(config.schemaUrl, { agent })
+  return fetch(config.schemaUrl)
   .then(res => res.text())
   .then(schemaTxt => {
     const shParser = ShExParser.construct();

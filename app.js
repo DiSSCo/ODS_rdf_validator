@@ -33,10 +33,7 @@ app.use(function(err, req, res, next) {
   res.json('error');
 });
 
-const agent = new https.Agent({
-  rejectUnauthorized: !config.selfSignedCertificate
-});
-fetch(config.schemaUrl, { agent })
+fetch(config.schemaUrl)
 .then(res => res.text())
 .then(schemaTxt => {
   const shParser = ShExParser.construct();

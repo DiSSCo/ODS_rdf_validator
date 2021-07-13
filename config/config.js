@@ -1,6 +1,5 @@
 config = {
   port: 3000,
-  schemaUrl: "https://URL_TO_SHEX_SCHEMA",
-  selfSignedCertificate: false
+  schemaUrl: "http://URL_TO_SHEX_SCHEMA"
 }
 module.exports = config;
