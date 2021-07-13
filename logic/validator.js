@@ -2,9 +2,8 @@ const ShExUtil = require("@shexjs/util");
 const ShExValidator = require("@shexjs/validator");
 const ShExParser = require("@shexjs/parser");
 const n3 = require("n3");
-import 'babel-polyfill';
+const jsonld = require("jsonld");
 
-// Just temporary: include the Shex schema as a string. Where/ how to fetch from in the future?
 const SHEX_SCHEMA_TXT = "PREFIX ods: <http://github.com/hardistyar/openDS/ods-ontology/terms/>\n"
 +"PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"
 +"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
@@ -17,15 +16,15 @@ const SHEX_SCHEMA_TXT = "PREFIX ods: <http://github.com/hardistyar/openDS/ods-on
 
 console.log("ods_rdf_validator initialized");
 
-export function validate(odsObject, id, jsonldModule){
+async function validate(odsObject, id){
   console.log("validation function called!");
 
-  return jsonldModule.toRDF(odsObject, {format: 'application/n-quads'})
+  return jsonld.toRDF(odsObject, {format: 'application/n-quads'})
   .then(rdfData => {
     return new Promise(function (resolve, reject) {
       const loadedData = new n3.Store();
       const parser = new n3.Parser({
-        baseIRI: "http://github.com/DiSSCo/openDS/ods-ontology/terms/",
+        baseIRI: "http://github.com/hardistyar/openDS/ods-ontology/terms/",
         blankNodePrefix: "",
         format: "text/turtle"
       });
@@ -52,3 +51,5 @@ export function validate(odsObject, id, jsonldModule){
     return result;
   });
 }
+
+module.exports = validate;
