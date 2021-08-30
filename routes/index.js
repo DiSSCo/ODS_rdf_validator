@@ -34,7 +34,7 @@ router.post('/validate', async (req, res) => {
   } catch (e) {
     res
       .status(200)
-      .json({ success: false, msg: 'An error occurred during validation' });
+      .json({ success: false, msg: 'An error occurred during validation: ' + e});
   }
 });
 
