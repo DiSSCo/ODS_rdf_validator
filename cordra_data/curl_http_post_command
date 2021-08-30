@@ -1,10 +1,12 @@
-curl -XPOST 'https://172.28.128.8/objects?type=ODS_semantic_schema&suffix=testId1' -u admin -H 'Content-Type: application/json' -d '
+
+curl -XPUT 'https://172.28.128.8/objects/test.20.5000.1025/testId10' -u admin -H 'Content-Type: application/json' -d '
+curl -XPOST 'https://172.28.128.8/objects?type=ODS_Schema&suffix=demo_digital_specimen' -u admin -H 'Content-Type: application/json' -d '
 {
-  "id":"test.20.5000.1025/testId1",
+  "id":"test.20.5000.1025/demo_digital_specimen",
   "typeName":"ODStype1804",
-  "@context":{
+  "@context":[{
     "ods":"http://github.com/hardistyar/openDS/ods-ontology/terms/"
-  },
+  }],
   "@graph":[
     {
       "@id":"https://doi.org/20.5000.1025/ae88bb3a666ec72dbc52",

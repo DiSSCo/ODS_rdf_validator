@@ -37,7 +37,7 @@ fetch(config.schemaUrl)
 .then(res => res.text())
 .then(schemaTxt => {
   const shParser = ShExParser.construct();
-  const parsedSchema = shParser.parse(schemaTxt)
+  const parsedSchema = shParser.parse(schemaTxt);
   app.locals.shexSchema = parsedSchema;
 });
 

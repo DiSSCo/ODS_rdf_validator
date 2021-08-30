@@ -22,12 +22,7 @@
     "type": "object",
     "title": "root openDS schema for ODStype1804",
     "description": "The root schema comprises the entire JSON document.",
-    "required": [
-      "id",
-      "typeName",
-      "@context",
-      "@graph"
-    ],
+    "required": ["id", "typeName", "@context", "@graph"],
     "examples": [
       {
         "id": "20.5000.1025/ae88bb3a666ec72dbc52",
@@ -42,10 +37,7 @@
               "ods:modified": "2021-06-17T09:18:02.130Z",
               "ods:midsLevel": 1,
               "ods:physicalSpecimenId": "NHMUK010517563",
-              "ods:institution": [
-                "NHMUK",
-                "https://ror.org/039zvsn29"
-              ],
+              "ods:institution": ["NHMUK", "https://ror.org/039zvsn29"],
               "ods:materialType": "Dry - pinned",
               "ods:name": "Elophila nymphaeata (Linnaeus, 1758)"
             }
@@ -70,25 +62,19 @@
         "$id": "#/properties/typeName",
         "type": "string",
         "title": "Type name",
-        "enum": [
-          "ODStype1804"
-        ]
+        "enum": ["ODStype1804"]
       },
       "@context": {
         "$id": "#/properties/%40context",
-        "type": "object",
+        "type": "array",
         "title": "RDF @context",
-        "required": [
-          "ods"
-        ],
+        "required": ["ods"],
         "properties": {
           "ods": {
             "$id": "#/properties/%40context/properties/ods",
             "type": "string",
             "title": "The ods schema",
-            "enum": [
-              "http://github.com/hardistyar/openDS/ods-ontology/terms/"
-            ]
+            "enum": ["http://github.com/hardistyar/openDS/ods-ontology/terms/"]
           }
         },
         "additionalProperties": true
@@ -102,5 +88,5 @@
     },
     "additionalProperties": false
   },
-  "javascript": "// Nashorn JDK cannot use XmlHttpRequest, therefore we must use Java Http requests\n// see for reference: https://gist.github.com/billybong/a462152889b6616deb02\n\nvar cordra = require(\"cordra\");\n\nexports.beforeSchemaValidation = beforeSchemaValidation;\n\nfunction beforeSchemaValidation(object, context) {\n    var dataToBeValidated = JSON.stringify({\n        \"id\": \"https://doi.org/20.5000.1025/ae88bb3a666ec72dbc52\",\n        \"content\": object.content\n    });\n    var con = new java.net.URL(\"http://172.28.128.8:3000/validate\").openConnection();\n    var response = {};\n    try {\n    write(con, dataToBeValidated);\n    response = JSON.parse(read(con.inputStream));\n    } catch (e){\n        console.log(\"RDF validation error\", e);\n    }\n    if(con.responseCode === 200 && response.success){\n        if(response.result[0].status === \"conformant\"){\n            return object;   \n        } else {\n            throw(\"RDF is not conformant to ODS schema\");\n        }\n    } else {\n        throw(response.msg || \"An error occurred during validation\");\n    }\n}\n\nfunction read(inputStream){\n    var inReader = new java.io.BufferedReader(new java.io.InputStreamReader(inputStream));\n    var inputLine;\n    var response = new java.lang.StringBuffer();\n\n    while ((inputLine = inReader.readLine()) !== null) {\n           response.append(inputLine);\n    }\n    inReader.close();\n    return response.toString();\n}\n\nfunction write(con, data){\n    con.requestMethod = \"POST\";\n    con.setRequestProperty( \"Content-Type\", \"application/json; charset=utf-8\");\n    con.doOutput=true;\n    var wr = new java.io.DataOutputStream(con.outputStream);\n    wr.writeBytes(data);\n    wr.flush();\n    wr.close();\n}"
+  "javascript": "// Nashorn JDK cannot use XmlHttpRequest, therefore we must use Java Http requests\n// see for reference: https://gist.github.com/billybong/a462152889b6616deb02\n\nvar cordra = require(\"cordra\");\n\nexports.beforeSchemaValidation = beforeSchemaValidation;\n\nfunction beforeSchemaValidation(object, context) {\n    var dataToBeValidated = JSON.stringify({\n        \"content\": object.content\n    });\n    var con = new java.net.URL(\"http://172.28.128.8:3000/validate\").openConnection();\n    var response = {};\n    try {\n    write(con, dataToBeValidated);\n    response = JSON.parse(read(con.inputStream));\n    } catch (e){\n        console.log(\"RDF validation error\", e);\n    }\n    if(con.responseCode === 200 && response.success){\n        if(response.result[0].status === \"conformant\"){\n            return object;   \n        } else {\n            throw(\"RDF is not conformant to ODS schema\");\n        }\n    } else {\n        throw(response.msg || \"An error occurred during validation\");\n    }\n}\n\nfunction read(inputStream){\n    var inReader = new java.io.BufferedReader(new java.io.InputStreamReader(inputStream));\n    var inputLine;\n    var response = new java.lang.StringBuffer();\n\n    while ((inputLine = inReader.readLine()) !== null) {\n           response.append(inputLine);\n    }\n    inReader.close();\n    return response.toString();\n}\n\nfunction write(con, data){\n    con.requestMethod = \"POST\";\n    con.setRequestProperty( \"Content-Type\", \"application/json; charset=utf-8\");\n    con.doOutput=true;\n    var wr = new java.io.DataOutputStream(con.outputStream);\n    wr.writeBytes(data);\n    wr.flush();\n    wr.close();\n}"
 }
