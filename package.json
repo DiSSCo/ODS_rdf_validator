@@ -4,12 +4,14 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "mocha"
+    "test": "mocha",
+    "buildshex": "node build_shex_pipeline/build_shex_schema"
   },
   "dependencies": {
-    "@shexjs/parser": "^1.0.0-alpha.14",
-    "@shexjs/util": "^1.0.0-alpha.14",
-    "@shexjs/validator": "^1.0.0-alpha.14",
+    "@shexjs/parser": "^1.0.0-alpha.15",
+    "@shexjs/util": "^1.0.0-alpha.15",
+    "@shexjs/validator": "^1.0.0-alpha.17",
+    "@shexjs/writer": "^1.0.0-alpha.15",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",

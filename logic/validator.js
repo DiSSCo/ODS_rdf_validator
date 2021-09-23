@@ -77,7 +77,7 @@ async function validate(odsObject, shexSchema) {
       const validator = ShExValidator.construct(shexSchema, db, {
         results: 'api'
       });
-      const result = validator.validate([{ node: id, shape: 'OdsShape' }]);
+      const result = validator.validate([{ node: id, shape: ShExValidator.start}]);
       return result;
     });
 }
