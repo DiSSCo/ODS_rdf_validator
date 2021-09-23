@@ -34,7 +34,7 @@ app.use(function(err, req, res, next) {
 });
 
 fetch(config.schemaUrl)
-.then(res => res.text())
+.then(res => res.json())
 .then(schemaTxt => {
   const shParser = ShExParser.construct();
   const parsedSchema = shParser.parse(schemaTxt);

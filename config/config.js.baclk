@@ -1,0 +1,12 @@
+const config = {
+  port: 3000,
+  schemaUrl: 'https://test.nsidr.org/objects/test.20.5000.1025/SemanticODSShexSchema?jsonPointer=/shexSchema',
+  shexUpload: {
+    username: 'ShexUploader',
+    password: 'z9kNB4LeZQMEwp5',
+    objectId: 'test.20.5000.1025/SemanticODSShexSchema',
+    // cordraBaseUrl must end with a slash
+    cordraBaseUrl: 'https://test.nsidr.org/'
+  }
+}
+module.exports = config;
