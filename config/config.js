@@ -6,7 +6,7 @@ const config = {
     password: '<PASSWORD>',
     objectId: '<PREFIX/SUFFIX>',
     // cordraBaseUrl must end with a slash
-    cordraBaseUrl: '<https://CORDRA_BASE_URI>'
+    cordraHost: '<CORDRA_HOST>'
   }
 }
 module.exports = config;
