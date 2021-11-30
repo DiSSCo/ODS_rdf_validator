@@ -2,7 +2,7 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const logger = require('morgan');
+const morgan = require('morgan');
 const https = require('https');
 
 const ShExParser = require("@shexjs/parser");
@@ -12,7 +12,7 @@ const indexRouter = require('./routes/index');
 
 const app = express();
 
-app.use(logger('dev'));
+app.use(morgan('common'));
 app.use(express.json());
 app.use(cookieParser());
 
